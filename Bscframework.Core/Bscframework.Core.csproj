@@ -12,12 +12,17 @@
 		<FileVersion>1.2.0.0</FileVersion>
 		<Description></Description>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 		<PackageOutputPath>..\nuGet</PackageOutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
+
+	<ItemGroup> 
+        <None Include="docs\README.md" Pack="true" PackagePath="\"/> 
+    </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
