@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bscframework.Core
 {
-    public interface IGenericRepository<TEntity, T>
+    public interface IGenericRepository<TEntity, T> : IGenericRepository
         where TEntity : class, IEntity<T>, new()
         where T : IComparable, IEquatable<T>
     {
@@ -18,4 +18,6 @@ namespace Bscframework.Core
         void Update(TEntity entity);
         void Delete(TEntity entity);
     }
+
+    public interface IGenericRepository { }
 }
