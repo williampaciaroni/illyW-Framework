@@ -5,9 +5,8 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags:
+    - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   build:
@@ -16,6 +15,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Exit if not on the main branch
+        if: endsWith(github.ref, 'main') == false
+        run: exit -1
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -24,8 +28,6 @@ jobs:
     - name: Build
       run: dotnet build basic-framework.sln -c Release
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.0.0
-      with:
-        path: nuGet
+    - name: Pack
+      run: dotnet pack basic-framework.sln -o tmpnuGet --no-restore
           
