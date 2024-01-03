@@ -12,6 +12,7 @@
 		<FileVersion>1.2.0.0</FileVersion>
 		<Description></Description>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -23,9 +24,12 @@
 	  <PackageReference Include="Microsoft.AspNetCore.App" Version="8.0.0" />
 	</ItemGroup>
 
+	<ItemGroup> 
+        <None Include="docs\README.md" Pack="true" PackagePath="\"/> 
+    </ItemGroup>
 
 	<ItemGroup>
-    <ProjectReference Include="..\Bscframework.Core\Bscframework.Core.csproj" />
-  </ItemGroup>
+    	<ProjectReference Include="..\Bscframework.Core\Bscframework.Core.csproj" />
+  	</ItemGroup>
 
 </Project>
