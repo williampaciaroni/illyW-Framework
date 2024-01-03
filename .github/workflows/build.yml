@@ -6,8 +6,6 @@ name: .NET
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -16,16 +14,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Exit if not on the main branch
+      if: endsWith(github.ref, 'main') == false
+      run: exit -1
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
         
     - name: Build
       run: dotnet build basic-framework.sln -c Release
 
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v4.0.0
+    - name: Pack
+      run: dotnet pack basic-framework.sln -o tmpnuGet --no-restore
+
+    - name: Display GitVersion config
+      uses: gittools/actions/gitversion/execute@v0
       with:
-        path: nuGet
+        useConfigFile: true
+        additionalArguments: '/showConfig'
           
