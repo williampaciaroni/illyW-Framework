@@ -3,13 +3,13 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<PackageId>illyW.Framework.Core</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.1.0.2</Version>
 		<Authors>William Paciaroni</Authors>
 		<Company>illy-W</Company>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<AssemblyVersion>1.1.0.2</AssemblyVersion>
 		<RepositoryUrl></RepositoryUrl>
-		<FileVersion>1.0.0.0</FileVersion>
+		<FileVersion>1.1.0.2</FileVersion>
 		<Description></Description>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
