@@ -5,7 +5,7 @@ name: .NET
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
 
 env:
   NuGetDirectory: ${{ github.workspace}}/tmpnuGet
@@ -15,60 +15,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-      
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 8.0.x
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0
-      with:
-        versionSpec: '5.x'
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
 
-    - name: Use GitVersion config file and execute
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v0
-      with:
-        useConfigFile: true
+      - name: Build
+        run: dotnet build illyW.Framework.sln -c Release
 
-    - name: Display GitVersion variables (without prefix)
-      run: |
-        echo "SemVer: ${{ steps.gitversion.outputs.SemVer }}"
-        
-    - name: Build
-      run: dotnet build basic-framework.sln -c Release /p:Version=${{ steps.gitversion.outputs.SemVer }}
+      - name: Pack
+        run: dotnet pack illyW.Framework.sln -o tmpnuGet --no-restore
 
-    - name: Pack
-      run: dotnet pack basic-framework.sln -o tmpnuGet --no-restore /p:Version=${{ steps.gitversion.outputs.SemVer }}
-      
-    # Publish the NuGet package as an artifact, so they can be used in the following jobs
-    - uses: actions/upload-artifact@v3
-      with:
-        name: nuget
-        if-no-files-found: error
-        retention-days: 7
-        path: ${{ env.NuGetDirectory }}/*.nupkg
+      # Publish the NuGet package as an artifact, so they can be used in the following jobs
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nuget
+          if-no-files-found: error
+          retention-days: 7
+          path: ${{ env.NuGetDirectory }}/*.nupkg
 
-    - name: Generate nuGetFiles JSON
-      id: nuGetPackages
-      run: |
-        echo "nuGetFiles=$(ls -l ${{ env.NuGetDirectory }} | grep '.nupkg' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> "$GITHUB_OUTPUT"
+      - name: Generate nuGetFiles JSON
+        id: nuGetPackages
+        run: |
+          echo "nuGetFiles=$(ls -l ${{ env.NuGetDirectory }} | grep '.nupkg' | awk -F ' ' '{print $9}' | jq -R -s -c 'split("\n") | map(select(length > 0))')" >> "$GITHUB_OUTPUT"
 
     outputs:
       nuGetFiles: ${{ steps.nuGetPackages.outputs.nuGetFiles }}
-    
+
   publish-nupkg:
     needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        file: ${{ fromJson(needs.build.outputs.nuGetFiles) }} 
-        
+        file: ${{ fromJson(needs.build.outputs.nuGetFiles) }}
+
     steps:
       # Download the NuGet package created in the previous job
       - uses: actions/download-artifact@v3
@@ -88,4 +73,3 @@ jobs:
       - name: Deploy to NuGet
         run: |
           dotnet nuget push ${{ env.NuGetDirectory }}/${{ matrix.file }} --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
-          

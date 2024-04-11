@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bscframework.Core", "Bscframework.Core\Bscframework.Core.csproj", "{FB533475-399F-4A8E-B370-302D90C82EEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "illyW.Framework.Core", "illyW.Framework.Core\illyW.Framework.Core.csproj", "{FB533475-399F-4A8E-B370-302D90C82EEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bscframework.EFCore", "Bscframework.EFCore\Bscframework.EFCore.csproj", "{D813A477-C3BE-47A6-ABFF-610E1ABFB079}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "illyW.Framework.EFCore", "illyW.Framework.EFCore\illyW.Framework.EFCore.csproj", "{D813A477-C3BE-47A6-ABFF-610E1ABFB079}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "illyW.Framework.Tests", "illyW.Framework.Tests\illyW.Framework.Tests.csproj", "{293B4081-F8C1-4711-BBA7-AFB844690A84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D813A477-C3BE-47A6-ABFF-610E1ABFB079}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D813A477-C3BE-47A6-ABFF-610E1ABFB079}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D813A477-C3BE-47A6-ABFF-610E1ABFB079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

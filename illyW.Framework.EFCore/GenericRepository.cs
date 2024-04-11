@@ -1,45 +1,46 @@
-﻿using Bscframework.Core;
+﻿using illyW.Framework.Core;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Bscframework.EFCore
+namespace illyW.Framework.EFCore
 {
     public abstract class GenericRepository<TEntity, T, TContext> : IGenericRepository<TEntity, T>
-        where TEntity : class, IEntity<T>, new()
+        where TEntity : class, IEntity<T>, INullable, new()
         where T : IComparable, IEquatable<T>
         where TContext : DbContext
     {
-        private TContext _Context;
+        private readonly TContext _context;
         protected readonly DbSet<TEntity> DbSet;
 
-        protected TContext Context { get { return _Context; } }
+        protected TContext Context { get { return _context; } }
 
         public GenericRepository(TContext context)
         {
             ArgumentNullException.ThrowIfNull(context);
 
             DbSet = context.Set<TEntity>();
-            _Context = context;
+            _context = context;
         }
 
-        public TEntity? GetSingle(T id)
+        public TEntity GetSingle(T id)
         {
             if (id.Equals(default)) throw new ArgumentNullException(nameof(id));
 
             return DbSet.SingleOrDefault(x => x.Id.Equals(id));
         }
 
-        public TEntity? GetSingle(Expression<Func<TEntity, bool>> condition)
+        public TEntity GetSingle(Expression<Func<TEntity, bool>> condition)
         {
             ArgumentNullException.ThrowIfNull(condition);
 
             return DbSet.SingleOrDefault(condition);
         }
 
-        public IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>>? condition = null)
+        public IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>> condition = null)
         {
             return condition != null ? DbSet.Where(condition).AsEnumerable() : DbSet.AsEnumerable();
         }

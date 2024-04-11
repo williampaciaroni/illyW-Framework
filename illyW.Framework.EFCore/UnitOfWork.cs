@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Bscframework.Core;
+using illyW.Framework.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Bscframework.EFCore
+namespace illyW.Framework.EFCore
 {
     public class UnitOfWork<TContext> : IUnitOfWork, IDisposable
         where TContext : DbContext
