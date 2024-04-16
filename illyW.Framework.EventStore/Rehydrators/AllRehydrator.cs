@@ -10,10 +10,7 @@ namespace illyW.Framework.EventStore.Rehydrators
 {
     public abstract class AllRehydrator(IServiceProvider serviceProvider, EventStoreClient client) : BaseRehydrator
     {
-        internal override void HandleEvent(ResolvedEvent resolvedEvent)
-        {
-            UpdateCheckpoint(resolvedEvent.OriginalPosition!.Value);
-        }
+        internal override abstract void HandleEvent(ResolvedEvent resolvedEvent);
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -46,6 +43,7 @@ namespace illyW.Framework.EventStore.Rehydrators
                         case StreamMessage.Event(var evnt):
                             Console.WriteLine($"Received event {evnt.OriginalEventNumber}@{evnt.OriginalStreamId}");
                             HandleEvent(evnt);
+                            UpdateCheckpoint(evnt.OriginalPosition!.Value);
                             break;
                     }
                 }

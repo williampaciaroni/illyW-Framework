@@ -12,10 +12,7 @@ namespace illyW.Framework.EventStore.Rehydrators
 {
     public abstract class StreamRehydrator(IServiceProvider serviceProvider, EventStoreClient client, string streamName, ILogger logger) : BaseRehydrator
     {
-        internal override void HandleEvent(ResolvedEvent resolvedEvent)
-        {
-            UpdateCheckpoint(resolvedEvent.OriginalEventNumber);
-        }
+        internal override abstract void HandleEvent(ResolvedEvent resolvedEvent);
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -48,6 +45,7 @@ namespace illyW.Framework.EventStore.Rehydrators
                         case StreamMessage.Event(var evnt):
                             logger.LogDebug($"Received event {evnt.OriginalEventNumber}@{evnt.OriginalStreamId}");
                             HandleEvent(evnt);
+                            UpdateCheckpoint(evnt.OriginalEventNumber);
                             break;
                     }
                 }
