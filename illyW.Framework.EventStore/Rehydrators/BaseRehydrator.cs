@@ -7,7 +7,7 @@ namespace illyW.Framework.EventStore.Rehydrators
 {
     public abstract class BaseRehydrator : BackgroundService
     {
-        internal abstract void HandleEvent(ResolvedEvent resolvedEvent);
+        public abstract void HandleEvent(ResolvedEvent resolvedEvent);
 
         internal abstract IPosition ReadStreamCheckpoint();
 

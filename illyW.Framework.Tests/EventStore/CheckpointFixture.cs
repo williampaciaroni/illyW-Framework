@@ -6,6 +6,7 @@ namespace illyW.Framework.Tests.EventStore;
 
 public class CheckpointFixture
 {
+    
     [Theory]
     [DefaultAutoData]
     public void StreamCheckpoint_SetPosition_Success(StreamCheckpoint checkpoint)

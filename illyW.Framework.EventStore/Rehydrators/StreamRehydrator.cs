@@ -12,8 +12,6 @@ namespace illyW.Framework.EventStore.Rehydrators
 {
     public abstract class StreamRehydrator(IServiceProvider serviceProvider, EventStoreClient client, string streamName, ILogger logger) : BaseRehydrator
     {
-        internal override abstract void HandleEvent(ResolvedEvent resolvedEvent);
-
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await Subscribe(stoppingToken);
