@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "illyW.Framework.EFCore", "i
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "illyW.Framework.Tests", "illyW.Framework.Tests\illyW.Framework.Tests.csproj", "{293B4081-F8C1-4711-BBA7-AFB844690A84}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "illyW.Framework.EventStore", "illyW.Framework.EventStore\illyW.Framework.EventStore.csproj", "{8DC6FA52-90D2-41AE-9447-721985262676}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{293B4081-F8C1-4711-BBA7-AFB844690A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DC6FA52-90D2-41AE-9447-721985262676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DC6FA52-90D2-41AE-9447-721985262676}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DC6FA52-90D2-41AE-9447-721985262676}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DC6FA52-90D2-41AE-9447-721985262676}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

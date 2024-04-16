@@ -1,4 +1,4 @@
-﻿using illyW.Framework.Core;
+﻿using illyW.Framework.Core.RepositoryPattern;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

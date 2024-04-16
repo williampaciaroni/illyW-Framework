@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace illyW.Framework.Core
+namespace illyW.Framework.Core.GenericEntityPattern
 {
     public interface IEntity<T> 
         where T : IComparable, IEquatable<T>

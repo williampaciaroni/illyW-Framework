@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using illyW.Framework.Core;
+using illyW.Framework.Core.RepositoryPattern;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace illyW.Framework.EFCore
 {
-    public class UnitOfWork<TContext> : IUnitOfWork, IDisposable
-        where TContext : DbContext
+    public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
     {
         protected TContext _Context { get; set; }
 

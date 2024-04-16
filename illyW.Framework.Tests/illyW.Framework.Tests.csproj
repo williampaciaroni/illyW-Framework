@@ -7,6 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <SonarQubeTestProject>true</SonarQubeTestProject>
     </PropertyGroup>
 
     <ItemGroup>
@@ -26,7 +27,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Shared\Fixtures\" />
+      <Folder Include="Core\Shared\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\illyW.Framework.EventStore\illyW.Framework.EventStore.csproj" />
     </ItemGroup>
 
 </Project>

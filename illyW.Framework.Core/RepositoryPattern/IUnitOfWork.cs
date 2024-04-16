@@ -1,6 +1,8 @@
-﻿namespace illyW.Framework.Core
+﻿using System;
+
+namespace illyW.Framework.Core.RepositoryPattern
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         TRepository GetRepository<TRepository>()
             where TRepository : IGenericRepository;
