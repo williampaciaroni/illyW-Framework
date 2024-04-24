@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using EventStore.Client;
 using illyW.Framework.EventStore.Entities;
 using illyW.Framework.EventStore.Repositories;
+using illyW.Framework.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace illyW.Framework.EventStore.Rehydrators
 {
-    public abstract class StreamRehydrator(IServiceProvider serviceProvider, EventStoreClient client, string streamName, ILogger logger) : BaseRehydrator
+    public abstract class StreamRehydrator(IServiceProvider serviceProvider, EventStoreClient client, string streamName, ILogger logger, StreamRehydratorConfiguration config = null) : BaseRehydrator
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -34,7 +35,7 @@ namespace illyW.Framework.EventStore.Rehydrators
 
             try
             {
-                var subscription = client.SubscribeToStream(streamName, checkpoint, cancellationToken: stoppingToken);
+                var subscription = client.SubscribeToStream(streamName, checkpoint, resolveLinkTos: config.ResolveLinkTos, cancellationToken: stoppingToken);
 
                 await foreach (var message in subscription.Messages)
                 {

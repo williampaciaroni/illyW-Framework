@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using EventStore.Client;
 using illyW.Framework.EventStore.Entities;
 using illyW.Framework.EventStore.Repositories;
+using illyW.Framework.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace illyW.Framework.EventStore.Rehydrators
 {
-    public abstract class AllRehydrator(IServiceProvider serviceProvider, EventStoreClient client) : BaseRehydrator
+    public abstract class AllRehydrator(IServiceProvider serviceProvider, EventStoreClient client, ILogger logger, AllRehydratorConfiguration config = null) : BaseRehydrator
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -32,14 +34,14 @@ namespace illyW.Framework.EventStore.Rehydrators
 
             try
             {
-                var subscription = client.SubscribeToAll(checkpoint, cancellationToken: stoppingToken);
+                var subscription = client.SubscribeToAll(checkpoint, resolveLinkTos: config.ResolveLinkTos, filterOptions: config.FilterOptions, cancellationToken: stoppingToken);
 
                 await foreach (var message in subscription.Messages)
                 {
                     switch (message)
                     {
                         case StreamMessage.Event(var evnt):
-                            Console.WriteLine($"Received event {evnt.OriginalEventNumber}@{evnt.OriginalStreamId}");
+                            logger.LogDebug($"Received event {evnt.OriginalEventNumber}@{evnt.OriginalStreamId}");
                             HandleEvent(evnt);
                             UpdateCheckpoint(evnt.OriginalPosition!.Value);
                             break;
@@ -48,15 +50,15 @@ namespace illyW.Framework.EventStore.Rehydrators
             }
             catch (OperationCanceledException)
             {
-                Console.WriteLine($"Subscription was canceled.");
+                logger.LogError($"Subscription was canceled.");
             }
             catch (ObjectDisposedException)
             {
-                Console.WriteLine($"Subscription was canceled by the user.");
+                logger.LogError($"Subscription was canceled by the user.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Subscription was dropped: {ex}");
+                logger.LogError($"Subscription was dropped: {ex}");
                 await Subscribe(stoppingToken);
             }
         }
