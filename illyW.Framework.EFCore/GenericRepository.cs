@@ -35,18 +35,18 @@ namespace illyW.Framework.EFCore
             return DbSet.SingleOrDefault(x => x.Id.Equals(id));
         }
         
-        public Task<TEntity> GetSingleAsync(T id)
-        {
-            ArgumentNullException.ThrowIfNull(id);
-
-            return DbSet.SingleOrDefaultAsync(x => x.Id.Equals(id));
-        }
-
         public TEntity GetSingle(Expression<Func<TEntity, bool>> condition)
         {
             ArgumentNullException.ThrowIfNull(condition);
 
             return DbSet.SingleOrDefault(condition);
+        }
+        
+        public Task<TEntity> GetSingleAsync(T id)
+        {
+            ArgumentNullException.ThrowIfNull(id);
+
+            return DbSet.SingleOrDefaultAsync(x => x.Id.Equals(id));
         }
         
         public Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> condition)

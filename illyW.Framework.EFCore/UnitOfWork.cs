@@ -10,52 +10,52 @@ namespace illyW.Framework.EFCore
 {
     public class UnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
     {
-        protected TContext _Context { get; set; }
+        protected TContext Context { get; set; }
 
-        private IEnumerable<IGenericRepository> _Repositories;
-        private IDbContextTransaction _ActiveTransaction;
-        private bool disposed = false;
+        private readonly IEnumerable<IGenericRepository> _repositories;
+        private IDbContextTransaction _activeTransaction;
+        private bool _disposed;
 
         public UnitOfWork(TContext context, IEnumerable<IGenericRepository> repositories)
         {
             ArgumentNullException.ThrowIfNull(context);
             Debug.WriteLine($"UnitOfWork - Constructor - Context hash code: {context.GetHashCode()}");
-            _Context = context;
-            _Repositories = repositories;
+            Context = context;
+            _repositories = repositories;
             BeginTransaction();
         }
 
         public void BeginTransaction()
         {
             Debug.WriteLine($"UnitOfWork - BeginTransaction - Trying to begin transaction");
-            if (_ActiveTransaction != null)
+            if (_activeTransaction != null)
             {
                 Debug.WriteLine($"UnitOfWork - BeginTransaction - Active transaction is not null");
 
                 ExecRollback();
             }
-            _ActiveTransaction = _Context.Database.BeginTransaction();
+            _activeTransaction = Context.Database.BeginTransaction();
             Debug.WriteLine($"UnitOfWork - ExecRollback - Transaction successfully began");
 
         }
 
         public void Commit()
         {
-            _Context.Database.CommitTransaction();
-            _ActiveTransaction = null;
-            _Context.Database.BeginTransaction(); 
+            Context.Database.CommitTransaction();
+            _activeTransaction = null;
+            Context.Database.BeginTransaction(); 
         }
 
         public TRepository GetRepository<TRepository>() where TRepository : IGenericRepository
         {
-            var r = _Repositories.OfType<TRepository>().FirstOrDefault();
+            var r = _repositories.OfType<TRepository>().FirstOrDefault();
             ArgumentNullException.ThrowIfNull(r);
             return r;
         }
 
         protected virtual void RejectScalarChanges()
         {
-            foreach (var entry in _Context.ChangeTracker.Entries())
+            foreach (var entry in Context.ChangeTracker.Entries())
             {
                 switch (entry.State)
                 {
@@ -81,21 +81,18 @@ namespace illyW.Framework.EFCore
         {
             Debug.WriteLine($"UnitOfWork - ExecRollback - Trying to execute rollback");
             RejectScalarChanges();
-            _Context.Database.RollbackTransaction();
-            _ActiveTransaction = null;
+            Context.Database.RollbackTransaction();
+            _activeTransaction = null;
             Debug.WriteLine($"UnitOfWork - ExecRollback - Rollback executed");
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!_disposed && disposing)
             {
-                if (disposing)
-                {
-                    _Context.Dispose();
-                }
+                Context.Dispose();
             }
-            this.disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()

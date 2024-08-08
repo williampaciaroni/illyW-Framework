@@ -11,7 +11,7 @@ namespace illyW.Framework.EventStore.Extensions
 {
     public static class WebApplicationBuilderExtensions
     {
-        public static IServiceCollection EnableEventStore<TContext>(this IServiceCollection services, IConfiguration configuration, string? eventStoreConnectionString = null) where TContext : EventStoreDbContext
+        public static IServiceCollection EnableEventStore<TContext>(this IServiceCollection services, IConfiguration configuration, string eventStoreConnectionString = null) where TContext : EventStoreDbContext
         {
             eventStoreConnectionString ??= configuration.GetConnectionString("EventStore");
 

@@ -100,12 +100,12 @@ public class CheckpointRepositoryFixture
         context.AllCheckpoints.SingleOrDefault(x => x.Id == allCheckpoint.Id).Should().BeNull();
     }
 
-    private StreamCheckpointRepository<TestEventStoreDbContext> CreateStreamCheckpointRepository(TestEventStoreDbContext eventStoreDbContext)
+    private static StreamCheckpointRepository<TestEventStoreDbContext> CreateStreamCheckpointRepository(TestEventStoreDbContext eventStoreDbContext)
     {
         return new StreamCheckpointRepository<TestEventStoreDbContext>(eventStoreDbContext);
     }
     
-    private AllCheckpointRepository<TestEventStoreDbContext> CreateAllCheckpointRepository(TestEventStoreDbContext eventStoreDbContext)
+    private static AllCheckpointRepository<TestEventStoreDbContext> CreateAllCheckpointRepository(TestEventStoreDbContext eventStoreDbContext)
     {
         return new AllCheckpointRepository<TestEventStoreDbContext>(eventStoreDbContext);
     }

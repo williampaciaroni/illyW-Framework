@@ -12,8 +12,8 @@ namespace illyW.Framework.Core.RepositoryPattern
         where T : IComparable, IEquatable<T>
     {
         TEntity GetSingle(T id);
-        Task<TEntity> GetSingleAsync(T id);
         TEntity GetSingle(Expression<Func<TEntity, bool>> condition);
+        Task<TEntity> GetSingleAsync(T id);
         Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> condition);
         IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>> condition = null);
         IAsyncEnumerable<TEntity> FetchAsync(Expression<Func<TEntity, bool>> condition = null);

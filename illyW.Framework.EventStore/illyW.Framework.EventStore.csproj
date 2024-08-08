@@ -13,7 +13,7 @@
         <Description></Description>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>illyW.Framework</RootNamespace>
+        <RootNamespace>illyW.Framework.EventStore</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

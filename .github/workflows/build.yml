@@ -12,8 +12,8 @@ env:
 
 jobs:
   build:
+    name: Build and Analyze
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -24,8 +24,28 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Install SonarCloud Scanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+
+      - name: Prepare SonarCloud Analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:"williampaciaroni_illyW-Framework" /o:williampaciaroni /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+
       - name: Build
         run: dotnet build illyW.Framework.sln -c Release
+
+      - name: Run Tests and Collect Coverage
+        run: dotnet test illyW.Framework.sln /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+      - name: Finalize SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Pack
         run: dotnet pack illyW.Framework.sln -o tmpnuGet --no-restore
