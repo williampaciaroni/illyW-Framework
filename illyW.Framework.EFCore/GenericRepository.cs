@@ -16,15 +16,15 @@ namespace illyW.Framework.EFCore
         where TContext : DbContext
     {
         private readonly TContext _context;
-        protected readonly DbSet<TEntity> DbSet;
+        private readonly DbSet<TEntity> _dbSet;
 
-        protected TContext Context { get { return _context; } }
+        private TContext Context { get { return _context; } }
 
-        public GenericRepository(TContext context)
+        protected GenericRepository(TContext context)
         {
             ArgumentNullException.ThrowIfNull(context);
 
-            DbSet = context.Set<TEntity>();
+            _dbSet = context.Set<TEntity>();
             _context = context;
         }
 
@@ -32,38 +32,38 @@ namespace illyW.Framework.EFCore
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            return DbSet.SingleOrDefault(x => x.Id.Equals(id));
+            return _dbSet.SingleOrDefault(x => x.Id.Equals(id));
         }
         
         public TEntity GetSingle(Expression<Func<TEntity, bool>> condition)
         {
             ArgumentNullException.ThrowIfNull(condition);
 
-            return DbSet.SingleOrDefault(condition);
+            return _dbSet.SingleOrDefault(condition);
         }
         
         public Task<TEntity> GetSingleAsync(T id)
         {
             ArgumentNullException.ThrowIfNull(id);
 
-            return DbSet.SingleOrDefaultAsync(x => x.Id.Equals(id));
+            return _dbSet.SingleOrDefaultAsync(x => x.Id.Equals(id));
         }
         
         public Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> condition)
         {
             ArgumentNullException.ThrowIfNull(condition);
 
-            return DbSet.SingleOrDefaultAsync(condition);
+            return _dbSet.SingleOrDefaultAsync(condition);
         }
 
         public IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>> condition = null)
         {
-            return condition != null ? DbSet.Where(condition).AsEnumerable() : DbSet.AsEnumerable();
+            return condition != null ? _dbSet.Where(condition).AsEnumerable() : _dbSet.AsEnumerable();
         }
         
         public IAsyncEnumerable<TEntity> FetchAsync(Expression<Func<TEntity, bool>> condition = null)
         {
-            return condition != null ? DbSet.Where(condition).AsAsyncEnumerable() : DbSet.AsAsyncEnumerable();
+            return condition != null ? _dbSet.Where(condition).AsAsyncEnumerable() : _dbSet.AsAsyncEnumerable();
         }
 
         public IResult Add(TEntity entity)
@@ -79,7 +79,7 @@ namespace illyW.Framework.EFCore
 
             try
             {
-                DbSet.Add(entity);
+                _dbSet.Add(entity);
                 Context.SaveChanges();
                 
                 r.Succeed();
@@ -107,7 +107,7 @@ namespace illyW.Framework.EFCore
 
             try
             {
-                await DbSet.AddAsync(entity);
+                await _dbSet.AddAsync(entity);
                 await Context.SaveChangesAsync();
                 
                 r.Succeed();
@@ -134,7 +134,7 @@ namespace illyW.Framework.EFCore
 
             try
             {
-                DbSet.Update(entity);
+                _dbSet.Update(entity);
                 Context.SaveChanges();
                 
                 r.Succeed();
@@ -161,7 +161,7 @@ namespace illyW.Framework.EFCore
 
             try
             {
-                DbSet.Update(entity);
+                _dbSet.Update(entity);
                 await Context.SaveChangesAsync();
                 
                 r.Succeed();
@@ -188,7 +188,7 @@ namespace illyW.Framework.EFCore
 
             try
             {
-                DbSet.Remove(entity);
+                _dbSet.Remove(entity);
                 Context.SaveChanges();
                 
                 r.Succeed();
@@ -215,7 +215,7 @@ namespace illyW.Framework.EFCore
 
             try
             {
-                DbSet.Remove(entity);
+                _dbSet.Remove(entity);
                 await Context.SaveChangesAsync();
                 
                 r.Succeed();

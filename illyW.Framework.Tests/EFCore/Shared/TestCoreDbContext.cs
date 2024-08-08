@@ -4,10 +4,5 @@ namespace illyW.Framework.Tests.EFCore.Shared;
 
 public class TestCoreDbContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<TestEntity> TestEntities { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        base.OnConfiguring(optionsBuilder);
-    }
+    public DbSet<TestEntity> TestEntities { get; set; } = null!;
 }
