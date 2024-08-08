@@ -24,6 +24,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
+        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
     </ItemGroup>
@@ -37,7 +38,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\illyW.Framework.EventStore\illyW.Framework.EventStore.csproj" />
+      <ProjectReference Include="..\illyW.Framework.Core\illyW.Framework.Core.csproj" />
+      <ProjectReference Include="..\illyW.Framework.EFCore\illyW.Framework.EFCore.csproj" />
     </ItemGroup>
 
 </Project>

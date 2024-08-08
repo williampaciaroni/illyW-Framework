@@ -1,1 +1,0 @@
-# illyW Framework EventStore
