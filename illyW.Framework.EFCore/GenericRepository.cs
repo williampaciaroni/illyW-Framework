@@ -66,9 +66,9 @@ namespace illyW.Framework.EFCore
             return condition != null ? _dbSet.Where(condition).AsAsyncEnumerable() : _dbSet.AsAsyncEnumerable();
         }
 
-        public IResult Add(TEntity entity)
+        public IResult<TEntity> Add(TEntity entity)
         {
-            Result r = new();
+            Result<TEntity> r = new();
             
             if (entity is null)
             {
@@ -83,6 +83,7 @@ namespace illyW.Framework.EFCore
                 Context.SaveChanges();
                 
                 r.Succeed();
+                r.Data = entity;
             }
             catch (Exception e)
             {
@@ -94,9 +95,9 @@ namespace illyW.Framework.EFCore
 
         }
         
-        public async Task<IResult> AddAsync(TEntity entity)
+        public async Task<IResult<TEntity>> AddAsync(TEntity entity)
         {
-            Result r = new();
+            Result<TEntity> r = new();
             
             if (entity is null)
             {
@@ -111,6 +112,7 @@ namespace illyW.Framework.EFCore
                 await Context.SaveChangesAsync();
                 
                 r.Succeed();
+                r.Data = entity;
             }
             catch (Exception e)
             {
@@ -121,9 +123,9 @@ namespace illyW.Framework.EFCore
             return r;
         }
 
-        public IResult Update(TEntity entity)
+        public IResult<TEntity> Update(TEntity entity)
         {
-            Result r = new();
+            Result<TEntity> r = new();
             
             if (entity is null)
             {
@@ -138,6 +140,7 @@ namespace illyW.Framework.EFCore
                 Context.SaveChanges();
                 
                 r.Succeed();
+                r.Data = entity;
             }
             catch (Exception e)
             {
@@ -148,9 +151,9 @@ namespace illyW.Framework.EFCore
             return r;
         }
         
-        public async Task<IResult> UpdateAsync(TEntity entity)
+        public async Task<IResult<TEntity>> UpdateAsync(TEntity entity)
         {
-            Result r = new();
+            Result<TEntity> r = new();
             
             if (entity is null)
             {
@@ -165,6 +168,7 @@ namespace illyW.Framework.EFCore
                 await Context.SaveChangesAsync();
                 
                 r.Succeed();
+                r.Data = entity;
             }
             catch (Exception e)
             {

@@ -15,6 +15,7 @@ public class RepositoryFixture
 
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
+        r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
     }
     
     [Theory]
@@ -54,6 +55,7 @@ public class RepositoryFixture
 
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
+        r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
     }
     
     [Theory]
@@ -267,6 +269,7 @@ public class RepositoryFixture
         
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
+        r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
         context.TestEntities.Single(x => x.Id == entity.Id).Value.Should().Be(randomString);
     }
     
@@ -310,6 +313,7 @@ public class RepositoryFixture
         
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
+        r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
         context.TestEntities.Single(x => x.Id == entity.Id).Value.Should().Be(randomString);
     }
     

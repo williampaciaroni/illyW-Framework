@@ -17,13 +17,13 @@ namespace illyW.Framework.Core.RepositoryPattern
         Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> condition);
         IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>> condition = null);
         IAsyncEnumerable<TEntity> FetchAsync(Expression<Func<TEntity, bool>> condition = null);
-        IResult Add(TEntity entity);
-        Task<IResult> AddAsync(TEntity entity);
-        IResult Update(TEntity entity);
-        Task<IResult> UpdateAsync(TEntity entity);
+        IResult<TEntity> Add(TEntity entity);
+        Task<IResult<TEntity>> AddAsync(TEntity entity);
+        IResult<TEntity> Update(TEntity entity);
+        Task<IResult<TEntity>> UpdateAsync(TEntity entity);
         IResult Delete(TEntity entity);
         Task<IResult> DeleteAsync(TEntity entity);
     }
 
-    public interface IGenericRepository { }
+    public interface IGenericRepository;
 }
