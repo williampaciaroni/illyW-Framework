@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
 		<PackageId>illyW.Framework.EFCore</PackageId>
-		<Version>1.2.9.0</Version>
+		<Version>1.3.0.0</Version>
 		<Authors>William Paciaroni</Authors>
 		<Company>illy-W</Company>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<AssemblyVersion>1.2.9.0</AssemblyVersion>
+		<AssemblyVersion>1.3.0.0</AssemblyVersion>
 		<RepositoryUrl></RepositoryUrl>
-		<FileVersion>1.2.9.0</FileVersion>
+		<FileVersion>1.3.0.0</FileVersion>
 		<Description></Description>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
