@@ -10,10 +10,12 @@ public interface IResult
     bool IsSuccessful { get; }
 
     void Succeed();
-    void Fail();
+    void Fail(string error = null);
 }
 
-public interface IResult<out T> : IResult
+public interface IResult<T> : IResult
 {
     T Data { get; }
+    
+    void Succeed(T data);
 }

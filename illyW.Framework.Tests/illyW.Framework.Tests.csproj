@@ -34,10 +34,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Core\Shared\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\illyW.Framework.Core\illyW.Framework.Core.csproj" />
       <ProjectReference Include="..\illyW.Framework.EFCore\illyW.Framework.EFCore.csproj" />
     </ItemGroup>

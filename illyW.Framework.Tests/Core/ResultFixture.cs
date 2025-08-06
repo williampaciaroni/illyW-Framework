@@ -17,6 +17,17 @@ public class ResultFixture
     }
     
     [Fact]
+    public void Result_T_Succeed_Success()
+    {
+        Result<int> r = new();
+        
+        r.Succeed(3);
+
+        r.IsSuccessful.Should().BeTrue();
+        r.Data.Should().Be(3);
+    }
+    
+    [Fact]
     public void Result_Fail_Success()
     {
         Result r = new();
@@ -35,6 +46,19 @@ public class ResultFixture
 
         r.IsSuccessful.Should().BeFalse();
         r.Errors.Should().BeEmpty();
+    }
+    
+    [Theory]
+    [DefaultAutoData]
+    public void Result_FailWithError_Success(string error)
+    {
+        Result r = new();
+        
+        r.Fail();
+        r.AddError(error);
+
+        r.IsSuccessful.Should().BeFalse();
+        r.Errors.First().Should().Be(error);
     }
     
     [Theory]
