@@ -11,12 +11,12 @@ namespace illyW.Framework.Core.RepositoryPattern
         where TEntity : class, IEntity<T>, new() 
         where T : IComparable, IEquatable<T>
     {
-        TEntity GetSingle(T id);
-        TEntity GetSingle(Expression<Func<TEntity, bool>> condition);
-        Task<TEntity> GetSingleAsync(T id);
-        Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> condition);
-        IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>> condition = null);
-        IAsyncEnumerable<TEntity> FetchAsync(Expression<Func<TEntity, bool>> condition = null);
+        TEntity GetSingle(T id, IList<string> includedProperties = null);
+        TEntity GetSingle(Expression<Func<TEntity, bool>> condition, IList<string> includedProperties = null);
+        Task<TEntity> GetSingleAsync(T id, IList<string> includedProperties = null);
+        Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> condition, IList<string> includedProperties = null);
+        IEnumerable<TEntity> Fetch(Expression<Func<TEntity, bool>> condition = null, IList<string> includedProperties = null);
+        IAsyncEnumerable<TEntity> FetchAsync(Expression<Func<TEntity, bool>> condition = null, IList<string> includedProperties = null);
         IResult<TEntity> Add(TEntity entity);
         Task<IResult<TEntity>> AddAsync(TEntity entity);
         IResult<TEntity> Update(TEntity entity);

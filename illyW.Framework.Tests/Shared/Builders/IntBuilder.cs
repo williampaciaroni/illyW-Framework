@@ -4,7 +4,7 @@ using AutoFixture.Kernel;
 using illyW.Framework.Tests.Shared.Attributes;
 using CollectionAttribute = illyW.Framework.Tests.Shared.Attributes.CollectionAttribute;
 
-namespace illyW.Framework.Tests.Shared
+namespace illyW.Framework.Tests.Shared.Builders
 {
     public class IntBuilder : ISpecimenBuilder
     {

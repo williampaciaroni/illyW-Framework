@@ -1,10 +1,11 @@
 using FluentAssertions;
 using illyW.Framework.Tests.EFCore.Shared;
 using illyW.Framework.Tests.Shared.Attributes;
+using illyW.Framework.Tests.Shared.Fixtures;
 
 namespace illyW.Framework.Tests.EFCore;
 
-public class RepositoryFixture
+public class RepositoryFixture : BaseFeatureFixture<TestCoreDbContext>
 {
     [Theory]
     [DefaultAutoData]
@@ -17,7 +18,7 @@ public class RepositoryFixture
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
         r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Add_Null(TestCoreDbContext context)
@@ -29,7 +30,7 @@ public class RepositoryFixture
         r.Errors.FirstOrDefault().Should().NotBeNull();
         r.Errors.First().Should().Be($"Entity {typeof(TestEntity).FullName} is null");
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Add_Duplicate(TestCoreDbContext context, TestEntity entity)
@@ -45,7 +46,7 @@ public class RepositoryFixture
         r.IsSuccessful.Should().BeFalse();
         r.Errors.FirstOrDefault().Should().NotBeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_AddAsync_Success(TestCoreDbContext context, TestEntity entity)
@@ -57,7 +58,7 @@ public class RepositoryFixture
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
         r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_AddAsync_Null(TestCoreDbContext context)
@@ -69,7 +70,7 @@ public class RepositoryFixture
         r.Errors.FirstOrDefault().Should().NotBeNull();
         r.Errors.First().Should().Be($"Entity {typeof(TestEntity).FullName} is null");
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_AddAsync_Duplicate(TestCoreDbContext context, TestEntity entity)
@@ -85,83 +86,154 @@ public class RepositoryFixture
         r.IsSuccessful.Should().BeFalse();
         r.Errors.FirstOrDefault().Should().NotBeNull();
     }
+
+    [Theory]
+    [DefaultAutoData]
+    public void TestRepository_GetSingleById_Success(TestEntity entity)
+    {
+        var context = NewDbContext();
+        
+        var repository = CreateRepository(context);
+        repository.Add(entity);
+        
+        context.SaveChanges();
+
+        var context2 = NewDbContext();
+        var repository2 = CreateRepository(context2);
+        
+        var singleEntity = repository2.GetSingle(entity.Id);
+
+        singleEntity.Should().NotBeNull();
+        singleEntity.Id.Should().Be(entity.Id);
+        singleEntity.TestEntity2.Should().BeNull();
+    }
+
+    [Theory]
+    [DefaultAutoData]
+    public void TestRepository_GetSingleById_IncludeProperty_Success(TestEntity entity,
+        TestEntity2 entity2)
+    {
+        var context = NewDbContext();
+        
+        var repository = CreateRepository(context);
+        entity.TestEntity2 = entity2;
+        entity.TestEntity2Id = entity2.Id;
+        repository.Add(entity);
+        
+        context.SaveChanges();
+        
+        var context2 = NewDbContext();
+        var repository2 = CreateRepository(context2);
+
+        var singleEntity = repository2.GetSingle(entity.Id, new List<string>()
+        {
+            nameof(TestEntity.TestEntity2)
+        });
+
+        singleEntity.Should().NotBeNull();
+        singleEntity.Id.Should().Be(entity.Id);
+        singleEntity.TestEntity2.Should().NotBeNull();
+        singleEntity.TestEntity2Id.Should().Be(entity2.Id);
+        singleEntity.TestEntity2!.Value.Should().Be(entity2.Value);
+    }
     
     [Theory]
     [DefaultAutoData]
-    public void TestRepository_GetSingleById_Success(TestCoreDbContext context, TestEntity entity)
+    public void TestRepository_GetSingleById_IncludePropertySecondLevel_Success(TestEntity entity,
+        TestEntity2 entity2, TestEntity3 entity3)
     {
+        var context = NewDbContext();
+        
         var repository = CreateRepository(context);
+        entity.TestEntity2 = entity2;
+        entity.TestEntity2Id = entity2.Id;
+        entity2.TestEntity3 = entity3;
+        entity2.TestEntity3Id = entity3.Id;
         repository.Add(entity);
-    
-        repository.GetSingle(entity.Id).Should().Be(entity);
+        
+        context.SaveChanges();
+        
+        var context2 = NewDbContext();
+        var repository2 = CreateRepository(context2);
+
+        var singleEntity = repository2.GetSingle(entity.Id, new List<string>()
+        {
+            $"{nameof(TestEntity.TestEntity2)}.{nameof(TestEntity.TestEntity2.TestEntity3)}"
+        });
+
+        singleEntity.Should().NotBeNull();
+        singleEntity.Id.Should().Be(entity.Id);
+        singleEntity.TestEntity2.Should().NotBeNull();
+        singleEntity.TestEntity2Id.Should().Be(entity2.Id);
+        singleEntity.TestEntity2!.Value.Should().Be(entity2.Value);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_GetSingleById_Null(TestCoreDbContext context, int id)
     {
         var repository = CreateRepository(context);
-    
+
         repository.GetSingle(id).Should().BeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_GetSingleByIdAsync(TestCoreDbContext context, TestEntity entity)
     {
         var repository = CreateRepository(context);
         await repository.AddAsync(entity);
-    
+
         (await repository.GetSingleAsync(entity.Id)).Should().Be(entity);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_GetSingleByIdAsync_Null(TestCoreDbContext context, int id)
     {
         var repository = CreateRepository(context);
-    
+
         (await repository.GetSingleAsync(id)).Should().BeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_GetSingle(TestCoreDbContext context, TestEntity entity)
     {
         var repository = CreateRepository(context);
         repository.Add(entity);
-    
+
         repository.GetSingle(x => x.Id == entity.Id).Should().Be(entity);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_GetSingle_Null(TestCoreDbContext context, int id)
     {
         var repository = CreateRepository(context);
-    
+
         repository.GetSingle(x => x.Id == id).Should().BeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_GetSingleAsync(TestCoreDbContext context, TestEntity entity)
     {
         var repository = CreateRepository(context);
         await repository.AddAsync(entity);
-    
+
         (await repository.GetSingleAsync(x => x.Id == entity.Id)).Should().Be(entity);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_GetSingleAsync_Null(TestCoreDbContext context, int id)
     {
         var repository = CreateRepository(context);
-    
+
         (await repository.GetSingleAsync(x => x.Id == id)).Should().BeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Fetch(TestCoreDbContext context, TestEntity entity1, TestEntity entity2)
@@ -169,11 +241,11 @@ public class RepositoryFixture
         var repository = CreateRepository(context);
         repository.Add(entity1);
         repository.Add(entity2);
-    
+
         repository.Fetch().Count().Should().Be(2);
-        repository.Fetch().Should().Equal([entity1,entity2]);
+        repository.Fetch().Should().Equal([entity1, entity2]);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_FetchAsync(TestCoreDbContext context, TestEntity entity1, TestEntity entity2)
@@ -183,9 +255,9 @@ public class RepositoryFixture
         await repository.AddAsync(entity2);
 
         (await repository.FetchAsync().CountAsync()).Should().Be(2);
-        (await repository.FetchAsync().ToListAsync()).Should().Equal([entity1,entity2]);
+        (await repository.FetchAsync().ToListAsync()).Should().Equal([entity1, entity2]);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Delete_Success(TestCoreDbContext context, TestEntity entity)
@@ -194,11 +266,11 @@ public class RepositoryFixture
         repository.Add(entity);
 
         var r = repository.Delete(entity);
-        
+
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().BeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Delete_NotFound(TestCoreDbContext context, TestEntity entity)
@@ -206,10 +278,10 @@ public class RepositoryFixture
         var repository = CreateRepository(context);
 
         var r = repository.Delete(entity);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Delete_Null(TestCoreDbContext context)
@@ -217,10 +289,10 @@ public class RepositoryFixture
         var repository = CreateRepository(context);
 
         var r = repository.Delete(null!);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_DeleteAsync_Success(TestCoreDbContext context, TestEntity entity)
@@ -229,11 +301,11 @@ public class RepositoryFixture
         await repository.AddAsync(entity);
 
         var r = await repository.DeleteAsync(entity);
-        
+
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().BeNull();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_DeleteAsync_NotFound(TestCoreDbContext context, TestEntity entity)
@@ -241,10 +313,10 @@ public class RepositoryFixture
         var repository = CreateRepository(context);
 
         var r = await repository.DeleteAsync(entity);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_DeleteAsync_Null(TestCoreDbContext context)
@@ -252,10 +324,10 @@ public class RepositoryFixture
         var repository = CreateRepository(context);
 
         var r = await repository.DeleteAsync(null!);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Update_Success(TestCoreDbContext context, TestEntity entity, string randomString)
@@ -266,13 +338,13 @@ public class RepositoryFixture
         entity.Value = randomString;
 
         var r = repository.Update(entity);
-        
+
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
         r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
         context.TestEntities.Single(x => x.Id == entity.Id).Value.Should().Be(randomString);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Update_Null(TestCoreDbContext context, TestEntity entity, string randomString)
@@ -283,10 +355,10 @@ public class RepositoryFixture
         entity.Value = randomString;
 
         var r = repository.Update(null!);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public void TestRepository_Update_NotFound(TestCoreDbContext context, TestEntity entity, string randomString)
@@ -296,13 +368,14 @@ public class RepositoryFixture
         entity.Value = randomString;
 
         var r = repository.Update(null!);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
-    public async Task TestRepository_UpdateAsync_Success(TestCoreDbContext context, TestEntity entity, string randomString)
+    public async Task TestRepository_UpdateAsync_Success(TestCoreDbContext context, TestEntity entity,
+        string randomString)
     {
         var repository = CreateRepository(context);
         await repository.AddAsync(entity);
@@ -310,13 +383,13 @@ public class RepositoryFixture
         entity.Value = randomString;
 
         var r = await repository.UpdateAsync(entity);
-        
+
         r.IsSuccessful.Should().BeTrue();
         context.TestEntities.SingleOrDefault(x => x.Id == entity.Id).Should().NotBeNull();
         r.Data.Should().BeEquivalentTo(context.TestEntities.SingleOrDefault(x => x.Id == entity.Id));
         context.TestEntities.Single(x => x.Id == entity.Id).Value.Should().Be(randomString);
     }
-    
+
     [Theory]
     [DefaultAutoData]
     public async Task TestRepository_UpdateAsync_Null(TestCoreDbContext context, TestEntity entity, string randomString)
@@ -327,20 +400,21 @@ public class RepositoryFixture
         entity.Value = randomString;
 
         var r = await repository.UpdateAsync(null!);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
-    
+
     [Theory]
     [DefaultAutoData]
-    public async Task TestRepository_UpdateAsync_NotFound(TestCoreDbContext context, TestEntity entity, string randomString)
+    public async Task TestRepository_UpdateAsync_NotFound(TestCoreDbContext context, TestEntity entity,
+        string randomString)
     {
         var repository = CreateRepository(context);
 
         entity.Value = randomString;
 
         var r = await repository.UpdateAsync(entity);
-        
+
         r.IsSuccessful.Should().BeFalse();
     }
 

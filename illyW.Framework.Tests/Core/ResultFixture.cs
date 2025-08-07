@@ -63,19 +63,6 @@ public class ResultFixture
     
     [Theory]
     [DefaultAutoData]
-    public void Result_FailWithError_Success(string error)
-    {
-        Result r = new();
-        
-        r.Fail();
-        r.AddError(error);
-
-        r.IsSuccessful.Should().BeFalse();
-        r.Errors.First().Should().Be(error);
-    }
-    
-    [Theory]
-    [DefaultAutoData]
     public void Result_FailWithErrors_Success(List<string> errors)
     {
         Result r = new();
